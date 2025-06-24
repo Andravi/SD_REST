@@ -13,16 +13,32 @@ class DogService {
   }
 
   // Adiciona um novo cachorro
-  addDog(name: string, image: string, breed: string, subBreeds: string[] | null): Dog {
+  addDog(
+    name: string,
+    image: string,
+    breed: string,
+    subBreeds: string[] | null
+  ): Dog {
     const newDog: Dog = {
       name,
       breed,
       image,
-      subBreeds
+      subBreeds,
+      votos: 0
     };
     this.dogs.push(newDog);
     return newDog;
   }
+
+  voteInDog(dog: Dog) {
+    dog.votos++
+    return dog
+  }
+
+  getTopDogs() {
+    return this.dogs.sort((a, b) => b.votos - a.votos).slice(0,3)
+  }
+  
 
   // Lista todos os cachorros
   getAllDogs(): Dog[] {
@@ -41,11 +57,14 @@ class DogService {
     return this.dogs.length < initialLength;
   }
 
-  getImageByBreed(breed: string): string { 
-    return "COLOCAR STRING AQUI"
+  async getImageByBreed(breed: string): Promise<string> {
+    console.log(breed)
+    const response = await axios.get(`${DOG_API}/breed/${breed}/images/random`);
+    return response.data.message;
   }
-  getRandomBreed(): string{
-    return "brend"
+  async getRandomBreed(): Promise<string> {
+    const response = await axios.get(`${DOG_API}/breeds/list/random/1`);
+    return response.data.message[0];
   }
 }
 

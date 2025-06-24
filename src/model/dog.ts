@@ -3,7 +3,7 @@ export interface Dog {
   breed: string;
   image: string;
   subBreeds?: string[] | null;
-  votos?: boolean; 
+  votos: number; 
 }
 
 export type DogList = Record<string, string[]>;

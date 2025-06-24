@@ -1,0 +1,169 @@
+openapi: 3.1.0
+info:
+  title: Dog API
+  description: API para gerenciamento de cachorros com sistema de votação
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Servidor local de desenvolvimento
+
+paths:
+  /dogs/breeds:
+    get:
+      summary: Lista todas as raças disponíveis
+      description: Retorna a lista de raças de cachorro da DogAPI externa
+      responses:
+        '200':
+          description: Lista de raças obtida com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+        '500':
+          description: Erro ao acessar a API externa
+
+  /dogs:
+    post:
+      summary: Adiciona um novo cachorro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Nome do cachorro
+                  example: "Rex"
+                breed:
+                  type: string
+                  description: Raça do cachorro
+                  example: "labrador"
+                subBreeds:
+                  type: array
+                  items:
+                    type: string
+                  description: Sub-raças (opcional)
+                  example: ["yellow", "black"]
+              required:
+                - name
+                - breed
+      responses:
+        '201':
+          description: Cachorro adicionado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dog'
+        '400':
+          description: Dados inválidos ou incompletos
+
+    get:
+      summary: Lista todos os cachorros cadastrados
+      responses:
+        '200':
+          description: Lista de cachorros obtida com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dog'
+
+  /dogs/vote/{name}:
+    get:
+      summary: Adiciona um voto para um cachorro
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nome do cachorro a receber voto
+      responses:
+        '200':
+          description: Voto computado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dog'
+        '404':
+          description: Cachorro não encontrado
+
+  /dogs/votes:
+    get:
+      summary: Retorna o top 3 cachorros mais votados
+      responses:
+        '200':
+          description: Top 3 obtido com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dog'
+                maxItems: 3
+
+  /dogs/{name}:
+    get:
+      summary: Busca um cachorro pelo nome
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nome do cachorro a ser buscado
+      responses:
+        '200':
+          description: Cachorro encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dog'
+        '404':
+          description: Cachorro não encontrado
+
+    delete:
+      summary: Remove um cachorro pelo nome
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nome do cachorro a ser removido
+      responses:
+        '204':
+          description: Cachorro removido com sucesso
+        '404':
+          description: Cachorro não encontrado
+
+components:
+  schemas:
+    Dog:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Rex"
+        breed:
+          type: string
+          example: "labrador"
+        subBreeds:
+          type: array
+          items:
+            type: string
+          example: ["yellow", "black"]
+        votes:
+          type: number
+          description: Quantidade de votos recebidos
+          example: 5
+      required:
+        - name
+        - breed

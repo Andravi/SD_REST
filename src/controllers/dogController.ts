@@ -27,13 +27,13 @@ export const addDog = async (req: Request, res: Response, next: Function): Promi
   if (!name) {
     res.status(400).json({ error: "Name required" });
   }
-
+  // Precisará obrigatoriamente do nome
   if (!breed) {
     // TODO Fazer com que só precise ter o nome, ai um cachorro sera criado, você pode escolher a raça mas a imagem será aleatória
-    breed = DogService.getRandomBreed()
+    breed = await DogService.getRandomBreed()
   }
 
-  const image = DogService.getImageByBreed(breed)
+  const image = await DogService.getImageByBreed(breed)
 
     try {
       const newDog = DogService.addDog(name, breed, image, subBreeds || null);
@@ -96,3 +96,34 @@ export const removeDog = async (
     res.status(500).json({ error: "Failed to delete dog" });
   }
 };
+
+export const addVoteInDog = (req: Request, res: Response) => {
+  try {
+    const dogName = req.params.name;
+    if (!dogName) {
+      res.status(400).json({ error: "Name parameter is required" });
+    }
+    const dog = DogService.getDogByName(dogName)
+
+    if (dog != undefined) {
+      DogService.voteInDog(dog);
+      res.status(200).json(dog);
+
+    } else {
+      res.status(404).json(dog);
+    }
+
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch dogs" });
+  }
+};
+
+export const top3Dogs = (req: Request, res: Response) => {
+  try {
+    const dogs = DogService.getTopDogs();
+    res.status(200).json(dogs);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch dogs" });
+  }
+};
+
