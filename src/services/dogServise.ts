@@ -15,8 +15,8 @@ class DogService {
   // Adiciona um novo cachorro
   addDog(
     name: string,
-    image: string,
     breed: string,
+    image: string,
     subBreeds: string[] | null
   ): Dog {
     const newDog: Dog = {

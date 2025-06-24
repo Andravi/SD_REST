@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Cachorros</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro de Cachorros</h1>
+        
+        <!-- Formulário de Cadastro -->
+        <div class="card">
+            <h2>Cadastrar Novo Cachorro</h2>
+            <form id="dogForm">
+                <div class="form-group">
+                    <label for="name">Nome do Cachorro:</label>
+                    <input type="text" id="name" required placeholder="Digite o nome do cachorro">
+                </div>
+                <button type="submit">Cadastrar</button>
+                <div id="formStatus"></div>
+            </form>
+        </div>
+
+        <!-- Lista de Cachorros -->
+        <div class="card">
+            <h2>Cachorros Cadastrados</h2>
+            <div id="dogsList"></div>
+        </div>
+
+        <!-- Top 3 Mais Votados -->
+        <div class="card">
+            <h2>Top 3 Mais Votados</h2>
+            <div id="topDogs"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
